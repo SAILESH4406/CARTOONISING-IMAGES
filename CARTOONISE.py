@@ -4,26 +4,20 @@ import numpy as np
 import cv2
 
 def cartoonize_image(image):
-    # Convert image to numpy array
+    
     img_array = np.array(image)
 
-    # Convert image to grayscale
     gray = cv2.cvtColor(img_array, cv2.COLOR_BGR2GRAY)
     
-    # Apply median blur to reduce noise
     gray_blurred = cv2.medianBlur(gray, 5)
     
-    # Detect edges using adaptive thresholding
     edges = cv2.adaptiveThreshold(
         gray_blurred, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
     
-    # Apply bilateral filter to reduce color palette
     color = cv2.bilateralFilter(img_array, d=9, sigmaColor=250, sigmaSpace=250)
     
-    # Create a sketch effect by combining edges with the color image
     cartoon = cv2.bitwise_and(color, color, mask=edges)
     
-    # Further enhance the cartoon effect by applying a stylization filter
     cartoon = cv2.stylization(cartoon, sigma_s=150, sigma_r=0.25)
     
     
